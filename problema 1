@@ -1,0 +1,215 @@
+import random
+
+#1
+def solicitar_info(tipo):
+  max_elemento = 0
+  if tipo == "buses":
+    max_elemento = 80
+  elif tipo == "lineas":
+    max_elemento = 40
+  print(f"Ingrese la cantidad de {tipo} a trabajar: ")
+  nro = int(input())
+  while nro < 0 or nro > max_elemento:
+    print("El número no es correcto, ingreselo nuevamente")
+    nro = int(input())
+  return nro
+
+
+
+#3
+def generar_datos(buses, lineas):
+  matriz = []
+  for i in range(buses):
+    info_bus = []
+    for j in range(lineas):
+      monto = random.randint(5000, 12000) # Número aleatorio entre 5000 y 12000
+      print(f"Generando el monto recaudado por el bus {i+1} en la línea {j+1}: {monto}")
+      info_bus.append(monto)
+    matriz.append(info_bus) # Agrega la fila completa a la matriz
+  return matriz
+
+def mostra_matriz_recaudacion(matriz):
+    print("Matriz de los montos recaudados:")
+    print()
+    print("Lineas", end="\t")
+    for i in range(len(matriz[0])):
+      print(f"L:{i+1}", end="\t")
+    print()
+     
+    for i in range(len(matriz)):
+      print(f"Bus: {i+1}", end="\t")
+      for j in range(len(matriz[i])):
+        print(f"{matriz[i][j]}", end="\t")
+      print()
+      
+      
+
+#4
+#a)
+def buscar_bus_mayor_recaudacion_de_la_empresa(matriz):
+  mayor = 0
+  for i in range(len(matriz)):
+    print(f"Recorriendo info del bus {i+1}")
+    suma_bus = 0
+    for j in range(len(matriz[i])):
+      suma_bus += matriz[i][j]
+    print(f"Fin de recorrido info del bus {i+1}")
+    print(f"El bus {i+1} ha recolectado {suma_bus}\n")
+    if suma_bus > mayor:
+      mayor = suma_bus
+  print(f"Mayor recaudación total encontrada de toda la empresa: {mayor} soles\n") #El de aqui es la recaudacion mayor
+  print("Buses con mayor r ecaudación de toda la empresa:") #Posible opcion, recorrer de nuevo la lista para buscar si hay repetido
+  for i in range(len(matriz)):
+    suma_bus = 0
+    for j in range(len(matriz[i])):
+      suma_bus = suma_bus + matriz[i][j]
+    if suma_bus == mayor:
+      print(f"Bus {i+1} con recaudación de {suma_bus}")
+      
+      
+#b)
+def buscar_bus_mayor_recaudacion_por_linea(matriz):
+  for j in range(len(matriz[0])):
+    mayor = matriz[0][j]
+    for i in range(1, len(matriz)):
+      if matriz[i][j] > mayor:
+        mayor = matriz[i][j]
+
+    print(f"\nRevisando recaudación en la línea {j+1}")
+    print(f"Mayor recaudación encontrada en la línea {j+1}: {mayor} soles")
+    print("Bus(es) que obtuvieron ese monto:")
+
+    for i in range(len(matriz)):
+      if matriz[i][j] == mayor:
+        print(f"Bus {i+1} en la línea {j+1} con recaudación de {mayor} soles")
+        
+
+#c)
+def buscar_linea_menor_recaudacion_por_cada_bus(matriz):
+  for i in range(len(matriz)):
+    menor = matriz[i][0]
+    for j in range(1, len(matriz[i])):
+      if matriz[i][j] < menor:
+        menor = matriz[i][j]
+
+    print(f"\nRevisando recaudación del bus {i+1}")
+    print(f"Menor recaudación encontrada del bus {i+1}: {menor} soles")
+    print("Línea(s) que obtuvieron ese monto:")
+
+    for j in range(len(matriz[i])):
+      if matriz[i][j] == menor:
+        print(f"Línea {j+1} del bus {i+1} con recaudación de {menor} soles")
+
+
+
+#5
+def bus_ordenar_mayor_menor_recaudación(matriz):
+    resumen = []
+    for i in range(len(matriz)):
+        suma = 0
+        for j in range(len(matriz[i])):
+            suma += matriz[i][j]
+        resumen.append([i + 1, suma])
+
+    lista_ordenada = []
+
+    while len(resumen) > 0:
+        mayor = resumen[0]
+        for i in range(1, len(resumen)):
+            if resumen[i][1] > mayor[1]:
+                mayor = resumen[i]
+        lista_ordenada.append(mayor)
+        resumen.remove(mayor)
+
+    print("\nBuses ordenados de mayor a menor recaudación")
+    for i in range(len(lista_ordenada)):
+        print(f"Bus {lista_ordenada[i][0]} = [{lista_ordenada[i][1]}]")
+
+
+#7
+def usuario_bus_linea(matriz):
+  num_bus = int(input("Ingrese el bus a buscar: "))
+  num_linea = int(input("Ingrese el linea a buscar: "))
+  monto = matriz[num_bus - 1][num_linea - 1]
+  print(f"El bus {num_bus} en la linea {num_linea} recaudo: {monto}")
+
+
+
+#8
+def intercambiar_recaudaciones(matriz):
+  print()
+  bus1 = int(input("Ingrese el primer bus: "))
+  bus2 = int(input("Ingrese el segundo bus: "))
+  linea = int(input("Ingrese la línea: "))
+
+  if bus1 > 0 and bus1 <= len(matriz) and bus2 > 0 and bus2 <= len(matriz) and linea > 0 and linea <= len(matriz[0]):
+    temp = matriz[bus1 - 1][linea - 1]
+    matriz[bus1 - 1][linea - 1] = matriz[bus2 - 1][linea - 1]
+    matriz[bus2 - 1][linea - 1] = temp
+    print(f"Se intercambiaron los montos de la línea {linea} entre el bus {bus1} y el bus {bus2}\n")
+  else:
+    print("Datos incorrectos\n")
+
+
+
+#9
+def suma_recursiva(lista, pos, total):
+  if pos == len(lista):
+    return total
+  return suma_recursiva(lista, pos + 1, total + lista[pos])
+
+
+def mostrar_suma_total(matriz):
+  print("\nSuma total de recaudación por bus:")
+  for i in range(len(matriz)):
+    total = suma_recursiva(matriz[i], 0, 0)
+    print(f"Bus {i+1} recaudó {total} soles")
+
+  
+  
+
+# ---------------- PROGRAMA PRINCIPAL -------------------------
+if __name__ == "__main__":
+  datos = []
+
+  while True:
+    print("\n*Menú de opciones*")
+    print("0. Generar datos")
+    print("1. Mostrar matriz de recaudación total")
+    print("2. Mostrar el bus con mayor recaudación de toda la empresa")
+    print("3. Mostrar la línea con menor recaudación de cada bus")
+    print("4. Mostrar el bus con mayor recaudación por cada línea")
+    print("5. Buscar la recaudación de un bus en una línea")
+    print("6. Ordenar de mayor a menor recaudación total de buses")
+    print("7. Intercambiar recaudaciones entre dos buses en una línea")
+    print("8. Mostrar suma total de recaudación por bus (recursivo)")
+    print("9. Salir del programa")
+
+    opcion = int(input("Ingrese la opción: "))
+
+    if opcion == 0:
+      buses = solicitar_info("buses")
+      lineas = solicitar_info("lineas")
+      datos = generar_datos(buses, lineas)
+      print(f"\nSe generaron los datos de {buses} buses y {lineas} líneas")
+
+    elif opcion == 1 and datos:
+      mostra_matriz_recaudacion(datos)
+    elif opcion == 2 and datos:
+      buscar_bus_mayor_recaudacion_de_la_empresa(datos)
+    elif opcion == 3 and datos:
+      buscar_linea_menor_recaudacion_por_cada_bus(datos)
+    elif opcion == 4 and datos:
+      buscar_bus_mayor_recaudacion_por_linea(datos)
+    elif opcion == 5 and datos:
+      usuario_bus_linea(datos)
+    elif opcion == 6 and datos:
+      bus_ordenar_mayor_menor_recaudación(datos)
+    elif opcion == 7 and datos:
+      intercambiar_recaudaciones(datos)
+    elif opcion == 8 and datos:
+      mostrar_suma_total(datos)
+    elif opcion == 9:
+      break
+    else:
+      print("Debe generar los datos primero (opción 0)")
